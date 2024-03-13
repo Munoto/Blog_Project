@@ -10,7 +10,11 @@ from django.views.decorators.http import require_POST
 def post_detail(request, year, month, day, post):
     post = get_object_or_404(Post, status=Post.Status.PUBLISHED, slug=post,
                              publish__year=year, publish__month=month, publish__day=day)
-    return render(request, 'blog/post/detail.html', {'post': post})
+    # список активных комментариев к посту
+    comments = post.comments.filter(active=True)
+    # форма для комментирования пользователя
+    form = CommentForm()
+    return render(request, 'blog/post/detail.html', {'post': post, 'comments': comments, 'form': form})
 
 
 def post_list(request):
